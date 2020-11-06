@@ -44,3 +44,15 @@ pub fn version() -> String {
         .unwrap_or(env!("CARGO_PKG_VERSION"))
         .to_string()
 }
+
+pub fn base_rpc_url() -> String {
+    env::var("RPC_URL").unwrap()
+}
+
+pub fn transaction_fee() -> String {
+    env::var("TRANSACTION_FEE").unwrap_or("0".to_string())
+}
+
+pub fn key_bytes() -> String {
+    env::var("KEY_BYTES").unwrap()
+}
