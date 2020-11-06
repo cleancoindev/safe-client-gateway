@@ -94,3 +94,8 @@ pub fn queued_transactions(
             )
         })
 }
+
+#[get("/v1/safes/<safe_address>/data")]
+pub fn request_nonce_and_data(context: Context, safe_address: String) {
+    tx_confirmation::request_nonce_and_data(safe_address);
+}

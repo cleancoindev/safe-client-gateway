@@ -1,7 +1,9 @@
 use crate::config::base_transaction_service_url;
+use crate::providers::ethereum::{Call, CallOptions, EthereumProvider};
 use crate::utils::cache::Cache;
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
+use ethereum_types::Address;
 use std::collections::HashMap;
 
 pub fn submit_confirmation(
@@ -30,4 +32,22 @@ pub fn submit_confirmation(
             String::from("Unexpected tx confirmation error"),
         ))
     }
+}
+
+pub fn request_nonce_and_data(safe_address: String) -> ApiResult<()> {
+    log::info!("touched endpoint! {}", safe_address);
+    let eth_provider = EthereumProvider::new(context);
+    let mut call = Call {
+        to: Some(payload.wallet),
+        value: None,
+        data: Some(safe::functions::nonce::encode_input().into()),
+        gas: None,
+        gas_price: None,
+        from: None,
+    };
+    let options = CallOptions {
+        block: "latest".to_string(),
+    };
+
+    //de
 }
