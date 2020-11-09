@@ -1,10 +1,15 @@
 use crate::config::base_transaction_service_url;
-use crate::providers::ethereum::{Call, CallOptions, EthereumProvider};
+use crate::providers::ethereum::types::Bytes;
+use crate::providers::ethereum::{to_string_result, Call, CallOptions, EthereumProvider};
 use crate::utils::cache::Cache;
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
-use ethereum_types::Address;
+use ethabi;
+use ethabi_contract::use_contract;
+use ethereum_types::{Address, U256};
 use std::collections::HashMap;
+
+use_contract!(safe, "./abis/safe.json");
 
 pub fn submit_confirmation(
     context: &Context,
@@ -34,11 +39,13 @@ pub fn submit_confirmation(
     }
 }
 
-pub fn request_nonce_and_data(safe_address: String) -> ApiResult<()> {
-    log::info!("touched endpoint! {}", safe_address);
+pub fn request_nonce_and_data(safe_address: String, context: &Context) -> ApiResult<U256> {
     let eth_provider = EthereumProvider::new(context);
-    let mut call = Call {
-        to: Some(payload.wallet),
+
+    log::info!("SAFE: {:#?}", &safe_address);
+    let address = serde_json::from_value(serde_json::value::Value::String(safe_address))?;
+    let call = Call {
+        to: Some(address),
         value: None,
         data: Some(safe::functions::nonce::encode_input().into()),
         gas: None,
@@ -49,5 +56,11 @@ pub fn request_nonce_and_data(safe_address: String) -> ApiResult<()> {
         block: "latest".to_string(),
     };
 
-    //de
+    log::info!("CALL: {:#?}", &call);
+
+    let simulate_result = eth_provider.call(&call, &options)?;
+    let bytes: Bytes = to_string_result(simulate_result)?.into();
+    let success = safe::functions::nonce::decode_output(&bytes.0)?;
+
+    Ok(U256::from(success))
 }

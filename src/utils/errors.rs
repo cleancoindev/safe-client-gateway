@@ -120,3 +120,9 @@ impl From<serde_json::error::Error> for ApiError {
         Self::new_from_message(format!("{:?}", err))
     }
 }
+
+impl From<ethabi::Error> for ApiError {
+    fn from(err: ethabi::Error) -> Self {
+        Self::new_from_message(format!("{:?}", err))
+    }
+}

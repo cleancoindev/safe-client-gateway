@@ -7,6 +7,8 @@ use crate::services::{
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use ethereum_types::U256;
+use rocket::http::ext::IntoCollection;
 use rocket::response::content;
 use rocket_contrib::json::Json;
 
@@ -96,6 +98,10 @@ pub fn queued_transactions(
 }
 
 #[get("/v1/safes/<safe_address>/data")]
-pub fn request_nonce_and_data(context: Context, safe_address: String) {
-    tx_confirmation::request_nonce_and_data(safe_address);
+pub fn request_nonce_and_data(
+    context: Context,
+    safe_address: String,
+) -> ApiResult<content::Json<String>> {
+    tx_confirmation::request_nonce_and_data(safe_address, &context)
+        .map(|it| content::Json(serde_json::to_string(it.as_ref()).unwrap()))
 }
