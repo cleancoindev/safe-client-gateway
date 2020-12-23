@@ -1,9 +1,9 @@
 use crate::config::request_cache_duration;
 use crate::models::requests::transfer_request::TransferRequest;
 use crate::models::service::transactions::requests::ConfirmationRequest;
-use crate::services::tx_confirmation;
 use crate::services::{
-    transactions_details, transactions_history, transactions_list, transactions_queued,
+    transactions_builder, transactions_details, transactions_history, transactions_list,
+    transactions_queued, tx_confirmation,
 };
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
@@ -105,7 +105,11 @@ pub fn request_tx_hash_for_transfer(
     transfer_request: Json<TransferRequest>,
 ) -> ApiResult<()> {
     // ApiResult<content::Json<String>> {
-    tx_confirmation::request_nonce_and_data(&context, safe_address, transfer_request.into_inner());
+    transactions_builder::request_nonce_and_data(
+        &context,
+        safe_address,
+        transfer_request.into_inner(),
+    );
     // .map(|it| content::Json(serde_json::to_string(it.as_ref()).unwrap()))
     Ok(())
 }
