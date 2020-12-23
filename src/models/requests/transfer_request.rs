@@ -7,4 +7,5 @@ pub struct TransferRequest {
     pub receiver: Address,
     pub value: u64,
     pub token_address: Option<Address>,
+    pub infura_token: String,
 }
