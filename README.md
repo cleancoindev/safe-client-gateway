@@ -53,6 +53,8 @@ Useful links:
 
 Additional NOTE: the `structs` defined in this project match those in staging. Therefore, using this in any other environment could potentially panic if the endpoint in the transaction service API is not deployed to production yet, or the data layout looks differently.  
 
+If you are doing Android development, you can point your code to use the `http://10.0.2.2:8000` URL as the base URL for requests to your local instance of the client gateway. You need to additionally rename in your copy of the project `Rocket.toml.sample` to `Rocket.toml`. 
+
 ## Tests
 
 To run all tests use the `cargo test` command. If you want to run a specific subset of tests, then add additionally any info regarding the path of the tests and `cargo` will match it.
