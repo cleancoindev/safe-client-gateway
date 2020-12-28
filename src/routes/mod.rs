@@ -23,6 +23,7 @@ pub fn active_routes() -> Vec<Route> {
         transactions::history_transactions,
         transactions::queued_transactions,
         transactions::submit_confirmation,
+        transactions::send_eth,
         hooks::update,
         health::health
     ]

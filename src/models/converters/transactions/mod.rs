@@ -1,6 +1,7 @@
 extern crate chrono;
 
 pub mod details;
+pub mod send_eth_request;
 pub mod summary;
 
 #[cfg(test)]
